@@ -2,10 +2,9 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { compare, hash } from "bcrypt";
 import { sign } from "jsonwebtoken";
+import { JWT_SECRET_KEY } from "src/config/jwt.secret";
 import { PrismaService } from "src/database/prisma/prisma.service";
 import { UsersAuthDto } from "./auth.dto";
-
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "";
 
 @Injectable()
 export class AuthService {
@@ -25,7 +24,9 @@ export class AuthService {
   }
 
   //* sign-up
-  async SignUp(signUpDto: UsersAuthDto) {
+  async SignUp(signUpDto: UsersAuthDto): Promise<{
+    accessToken: string;
+  }> {
     const { email, password } = signUpDto;
 
     //* 이미 회원가입한 유저인지 확인
@@ -50,7 +51,9 @@ export class AuthService {
   }
 
   //* log-in
-  async LogIn(logInDto: UsersAuthDto) {
+  async LogIn(logInDto: UsersAuthDto): Promise<{
+    accessToken: string;
+  }> {
     const { email, password } = logInDto;
 
     //* 회원가입한 유저인지 확인
