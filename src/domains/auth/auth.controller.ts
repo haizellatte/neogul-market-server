@@ -1,5 +1,14 @@
-import { Body, Controller, Get, Post, Req, Res } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from "@nestjs/common";
 import { Request, Response } from "express";
+import { JwtAuthGuard } from "src/guards/jwt-auth.guard";
 import { UsersAuthDto } from "./auth.dto";
 import { AuthService } from "./auth.service";
 
@@ -42,6 +51,7 @@ export class AuthController {
   }
 
   //* 쿠키 파서 (쿠키값 잘 읽어오는지 확인)
+  @UseGuards(JwtAuthGuard)
   @Get("/cookie")
   async getCookies(@Req() req: Request, @Res() res: Response) {
     const AuthenticationCookie = req.cookies["Authentication"];
@@ -49,6 +59,7 @@ export class AuthController {
   }
 
   //* log-out
+  @UseGuards(JwtAuthGuard)
   @Post("/log-out")
   logOut(@Req() req: Request, @Res() res: Response) {
     //* 로그아웃 시 쿠키 삭제

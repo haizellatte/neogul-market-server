@@ -2,7 +2,6 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { compare, hash } from "bcrypt";
 import { sign } from "jsonwebtoken";
-import { JWT_SECRET_KEY } from "src/config/jwt.secret";
 import { PrismaService } from "src/database/prisma/prisma.service";
 import { UsersAuthDto } from "./auth.dto";
 
@@ -14,13 +13,26 @@ export class AuthService {
   async generateAccessToken(user: Pick<User, "id" | "email">): Promise<string> {
     const accessToken = sign(
       { id: user.id, email: user.email },
-      JWT_SECRET_KEY,
+      process.env.JWT_SECRET_KEY,
       {
         subject: String(user.id),
         expiresIn: "2h",
       },
     );
     return accessToken;
+  }
+
+  //* 사용자 찾기
+  async getUserByEmail(email: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) throw new BadRequestException("Invalid email or password");
+
+    return user;
   }
 
   //* sign-up

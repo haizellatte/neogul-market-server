@@ -1,14 +1,23 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { ExtractJwt, Strategy } from "passport-local";
-import { JWT_SECRET_KEY } from "src/config/jwt.secret";
+import { Request } from "express";
+import { ExtractJwt, Strategy } from "passport-jwt";
+
+import { AuthService } from "src/domains/auth/auth.service";
+
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+
+interface TokenPayload {
+  id: string;
+  email: string;
+}
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+  constructor(private readonly authService: AuthService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        (request) => {
+        (request: Request) => {
           return request?.cookies?.Authorization;
         },
       ]),
@@ -17,7 +26,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       secretOrKey: JWT_SECRET_KEY, // token 발급에 사용할 시크릿 키
     });
   }
-  async validate(payload: any) {
-    return { userId: payload.sub, username: payload.username };
+  async validate(payload: TokenPayload) {
+    return this.authService.getUserByEmail(payload.email);
   }
 }
