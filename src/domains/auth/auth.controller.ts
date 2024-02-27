@@ -44,8 +44,8 @@ export class AuthController {
   //* 쿠키 파서 (쿠키값 잘 읽어오는지 확인)
   @Get("/cookie")
   async getCookies(@Req() req: Request, @Res() res: Response) {
-    const jwt = req.cookies["jwt"];
-    return res.send(jwt);
+    const AuthenticationCookie = req.cookies["Authentication"];
+    return res.send(AuthenticationCookie);
   }
 
   //* log-out
