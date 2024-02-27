@@ -19,6 +19,7 @@ export class AuthController {
   @Post("/sign-up")
   async signUp(
     @Body() signUpDto: UsersAuthDto,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
     const accessToken = await this.authService.SignUp(signUpDto);
@@ -30,6 +31,9 @@ export class AuthController {
       httpOnly: true,
       maxAge: 60 * 60 * 2000, // expire : 2시간
     });
+
+    console.log(req);
+
     return accessToken;
   }
 
@@ -39,6 +43,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const accessToken = await this.authService.LogIn(LogInDto);
+
     //* 생성한 accessTokendmf response cookie에 담아 전송한다.
     res.cookie("Authentication", accessToken, {
       domain: "localhost",
