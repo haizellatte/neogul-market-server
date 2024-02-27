@@ -7,6 +7,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { JWT_SECRET_KEY } from "./config/jwt.secret";
 import { PrismaModule } from "./database/prisma/prisma.module";
+import { DealsModule } from "./domains/deals/deals.module";
 import { DomainsModule } from "./domains/domains.module";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { JwtStrategy } from "./strategy/jwt.strategy";
@@ -24,6 +25,7 @@ import { JwtStrategy } from "./strategy/jwt.strategy";
     }),
     PrismaModule,
     DomainsModule,
+    DealsModule,
   ],
   providers: [
     AppService,

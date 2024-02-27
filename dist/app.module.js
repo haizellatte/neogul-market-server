@@ -16,6 +16,7 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const jwt_secret_1 = require("./config/jwt.secret");
 const prisma_module_1 = require("./database/prisma/prisma.module");
+const deals_module_1 = require("./domains/deals/deals.module");
 const domains_module_1 = require("./domains/domains.module");
 const jwt_auth_guard_1 = require("./guards/jwt-auth.guard");
 const jwt_strategy_1 = require("./strategy/jwt.strategy");
@@ -36,6 +37,7 @@ exports.AppModule = AppModule = __decorate([
             }),
             prisma_module_1.PrismaModule,
             domains_module_1.DomainsModule,
+            deals_module_1.DealsModule,
         ],
         providers: [
             app_service_1.AppService,

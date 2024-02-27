@@ -18,4 +18,19 @@ model User {
   email             String   @unique
   encryptedPassword String
   createdAt         DateTime @default(now())
+  Deal              Deal[]
+}
+
+model Deal {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  location  String
+  price     Float
+  likes     Int      @default(0)
+  views     Int      @default(0)
+  user      User     @relation(fields: [userEmail], references: [email])
+  userEmail String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
