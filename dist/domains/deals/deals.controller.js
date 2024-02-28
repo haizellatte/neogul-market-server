@@ -38,6 +38,12 @@ let DealsController = class DealsController {
     remove(dealId) {
         return this.dealsService.deleteDeal(dealId);
     }
+    toggleLike(user, dealId) {
+        return this.dealsService.toggleLike(dealId, user.email);
+    }
+    async uploadDealMainImg(file) {
+        return this.dealsService.uploadDealImg(file);
+    }
 };
 exports.DealsController = DealsController;
 __decorate([
@@ -77,6 +83,21 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], DealsController.prototype, "remove", null);
+__decorate([
+    (0, common_1.Patch)(":dealId/toggle-like"),
+    __param(0, (0, DUser_1.DUser)()),
+    __param(1, (0, common_1.Param)("dealId", common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number]),
+    __metadata("design:returntype", Promise)
+], DealsController.prototype, "toggleLike", null);
+__decorate([
+    (0, common_1.Post)(":dealId/img-upload"),
+    __param(0, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], DealsController.prototype, "uploadDealMainImg", null);
 exports.DealsController = DealsController = __decorate([
     (0, common_1.Controller)("deals"),
     __metadata("design:paramtypes", [deals_service_1.DealsService])

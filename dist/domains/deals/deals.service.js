@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DealsService = void 0;
 const common_1 = require("@nestjs/common");
+const fs = require("fs/promises");
 const prisma_service_1 = require("../../database/prisma/prisma.service");
 let DealsService = class DealsService {
     constructor(prisma) {
@@ -39,6 +40,51 @@ let DealsService = class DealsService {
         return this.prisma.deal.delete({
             where: { id: dealId },
         });
+    }
+    async uploadDealImg(file) {
+        await fs.writeFile(`./public/${file.originalname}`, file.buffer, "base64");
+        return file;
+    }
+    async toggleLike(dealId, userEmail) {
+        const like = await this.prisma.like.findUnique({
+            where: {
+                dealId_userEmail: {
+                    dealId,
+                    userEmail,
+                },
+            },
+        });
+        if (like) {
+            await this.prisma.like.delete({
+                where: {
+                    id: like.id,
+                },
+            });
+            return this.prisma.deal.update({
+                where: { id: dealId },
+                data: {
+                    likes: {
+                        decrement: 1,
+                    },
+                },
+            });
+        }
+        else {
+            await this.prisma.like.create({
+                data: {
+                    dealId,
+                    userEmail,
+                },
+            });
+            return this.prisma.deal.update({
+                where: { id: dealId },
+                data: {
+                    likes: {
+                        increment: 1,
+                    },
+                },
+            });
+        }
     }
 };
 exports.DealsService = DealsService;

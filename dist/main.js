@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 const app_module_1 = require("./app.module");
 const http_exception_filter_1 = require("./filters/http.exception.filter");
 const transform_interceptor_1 = require("./interceptors/transform.interceptor");
-async function bootstrap() {
+async function myServer() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule, {
         cors: true,
     });
@@ -16,5 +16,5 @@ async function bootstrap() {
     app.useGlobalInterceptors(new transform_interceptor_1.TransformInterceptor());
     app.useGlobalFilters(new http_exception_filter_1.HttpExceptionFilter());
 }
-bootstrap();
+myServer();
 //# sourceMappingURL=main.js.map

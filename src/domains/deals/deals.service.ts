@@ -55,7 +55,7 @@ export class DealsService {
   async toggleLike(dealId: number, userEmail: string): Promise<Deal> {
     const like = await this.prisma.like.findUnique({
       where: {
-        dealId_userId: {
+        dealId_userEmail: {
           dealId,
           userEmail,
         },

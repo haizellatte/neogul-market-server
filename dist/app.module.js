@@ -14,7 +14,6 @@ const jwt_1 = require("@nestjs/jwt");
 const passport_1 = require("@nestjs/passport");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
-const jwt_secret_1 = require("./config/jwt.secret");
 const prisma_module_1 = require("./database/prisma/prisma.module");
 const deals_module_1 = require("./domains/deals/deals.module");
 const domains_module_1 = require("./domains/domains.module");
@@ -30,11 +29,11 @@ exports.AppModule = AppModule = __decorate([
                 isGlobal: true,
                 envFilePath: ".env",
             }),
-            passport_1.PassportModule,
             jwt_1.JwtModule.register({
-                secret: jwt_secret_1.JWT_SECRET_KEY,
+                secret: process.env.JWT_SECRET_KEY,
                 signOptions: { expiresIn: "2h" },
             }),
+            passport_1.PassportModule,
             prisma_module_1.PrismaModule,
             domains_module_1.DomainsModule,
             deals_module_1.DealsModule,
