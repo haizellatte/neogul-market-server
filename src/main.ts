@@ -5,7 +5,7 @@ import { AppModule } from "./app.module";
 import { HttpExceptionFilter } from "./filters/http.exception.filter";
 import { TransformInterceptor } from "./interceptors/transform.interceptor";
 
-async function bootstrap() {
+async function myServer() {
   const app = await NestFactory.create<INestApplication>(AppModule, {
     cors: true,
   });
@@ -15,4 +15,5 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
 }
-bootstrap();
+
+myServer();

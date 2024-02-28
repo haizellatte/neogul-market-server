@@ -7,7 +7,10 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UploadedFile,
+  UseInterceptors,
 } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { Deal, Prisma, User } from "@prisma/client";
 import { DUser } from "src/decorators/DUser";
 import { UserOnly } from "src/decorators/user.only";
@@ -60,5 +63,22 @@ export class DealsController {
     @Param("dealId", ParseIntPipe) dealId: number,
   ): Promise<Deal> {
     return this.dealsService.toggleLike(dealId, user.email);
+  }
+
+  @Post("upload")
+  @UseInterceptors(FileInterceptor, "file")
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: any,
+  ) {
+    const imgUrl = `/uploads/${file.filename}`; //todo 파일 저장 경로를 설정
+    //todo 파일 정보와 함께 DB에 저장할 다른 정보들을 처리하는 로직 추가
+    // --> this.dealsService.deal.create({...body, imgUrl});
+    return { imgUrl }; // 클라이언트에 imgUrl 응답
+  }
+
+  @Post(":dealId/img-upload")
+  async uploadDealMainImg(@UploadedFile() file: Express.Multer.File) {
+    return this.dealsService(file);
   }
 }

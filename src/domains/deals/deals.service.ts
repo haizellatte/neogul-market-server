@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Deal, Prisma } from "@prisma/client";
+import * as fs from "fs/promises";
 import { PrismaService } from "src/database/prisma/prisma.service";
 
 @Injectable()
@@ -41,6 +42,13 @@ export class DealsService {
     return this.prisma.deal.delete({
       where: { id: dealId },
     });
+  }
+
+  //* img-upload
+  async uploadDealImg(file: Express.Multer.File) {
+    await fs.writeFile(`./public/${file.originalname}`, file.buffer, "base64");
+
+    return file;
   }
 
   //* toggle-like
