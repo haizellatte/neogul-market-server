@@ -30,7 +30,6 @@ let AuthController = class AuthController {
             httpOnly: true,
             maxAge: 60 * 60 * 2000,
         });
-        console.log(req);
         return accessToken;
     }
     async LogIn(LogInDto, res) {

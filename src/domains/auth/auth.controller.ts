@@ -32,8 +32,6 @@ export class AuthController {
       maxAge: 60 * 60 * 2000, // expire : 2시간
     });
 
-    console.log(req);
-
     return accessToken;
   }
 

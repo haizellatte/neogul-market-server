@@ -5,7 +5,6 @@ import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { JWT_SECRET_KEY } from "./config/jwt.secret";
 import { PrismaModule } from "./database/prisma/prisma.module";
 import { DealsModule } from "./domains/deals/deals.module";
 import { DomainsModule } from "./domains/domains.module";
@@ -18,11 +17,11 @@ import { JwtStrategy } from "./strategy/jwt.strategy";
       isGlobal: true,
       envFilePath: ".env",
     }),
-    PassportModule,
     JwtModule.register({
-      secret: JWT_SECRET_KEY,
+      secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: "2h" },
     }),
+    PassportModule,
     PrismaModule,
     DomainsModule,
     DealsModule,

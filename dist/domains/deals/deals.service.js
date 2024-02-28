@@ -16,28 +16,28 @@ let DealsService = class DealsService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async createDeal(data, user) {
+    async createDeal(data) {
         return this.prisma.deal.create({
             data,
         });
     }
-    async getAllDeals(user) {
+    async getAllDeals() {
         return this.prisma.deal.findMany();
     }
-    async getDealById(id, user) {
+    async getDealById(dealId) {
         return this.prisma.deal.findUnique({
-            where: { id },
+            where: { id: dealId },
         });
     }
-    async updateDeal(id, user, data) {
+    async updateDeal(dealId, data) {
         return this.prisma.deal.update({
-            where: { id },
+            where: { id: dealId },
             data,
         });
     }
-    async deleteDeal(id, user) {
+    async deleteDeal(dealId) {
         return this.prisma.deal.delete({
-            where: { id },
+            where: { id: dealId },
         });
     }
 };

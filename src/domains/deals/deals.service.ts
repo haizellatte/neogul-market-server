@@ -1,47 +1,93 @@
 import { Injectable } from "@nestjs/common";
-import { Deal, Prisma, User } from "@prisma/client";
+import { Deal, Prisma } from "@prisma/client";
 import { PrismaService } from "src/database/prisma/prisma.service";
 
 @Injectable()
 export class DealsService {
   constructor(private prisma: PrismaService) {}
 
-  async createDeal(
-    data: Prisma.DealCreateInput,
-    user: Pick<User, "email">,
-  ): Promise<Deal> {
+  //* create-deal
+  async createDeal(data: Prisma.DealUncheckedCreateInput): Promise<Deal> {
     return this.prisma.deal.create({
       data,
     });
   }
 
-  async getAllDeals(user: Pick<User, "email">): Promise<Deal[]> {
+  //* get-all-deal
+  async getAllDeals(): Promise<Deal[]> {
     return this.prisma.deal.findMany();
   }
 
-  async getDealById(
-    id: number,
-    user: Pick<User, "email">,
-  ): Promise<Deal | null> {
+  //* get-by-dealId
+  async getDealById(dealId: number): Promise<Deal | null> {
     return this.prisma.deal.findUnique({
-      where: { id },
+      where: { id: dealId },
     });
   }
 
+  //* update-deal
   async updateDeal(
-    id: number,
-    user: Pick<User, "email">,
+    dealId: number,
     data: Prisma.DealUpdateInput,
   ): Promise<Deal> {
     return this.prisma.deal.update({
-      where: { id },
+      where: { id: dealId },
       data,
     });
   }
 
-  async deleteDeal(id: number, user: Pick<User, "email">): Promise<Deal> {
+  //* delete-deal
+  async deleteDeal(dealId: number): Promise<Deal> {
     return this.prisma.deal.delete({
-      where: { id },
+      where: { id: dealId },
     });
+  }
+
+  //* toggle-like
+  async toggleLike(dealId: number, userEmail: string): Promise<Deal> {
+    const like = await this.prisma.like.findUnique({
+      where: {
+        dealId_userId: {
+          dealId,
+          userEmail,
+        },
+      },
+    });
+
+    //* 이미 좋아요 되어있다면 👉 -1 취소(delete)
+    if (like) {
+      await this.prisma.like.delete({
+        where: {
+          id: like.id,
+        },
+      });
+
+      return this.prisma.deal.update({
+        where: { id: dealId },
+        data: {
+          likes: {
+            decrement: 1,
+          },
+        },
+      });
+    }
+    //* 아니라면 👉 +1 create
+    else {
+      await this.prisma.like.create({
+        data: {
+          dealId,
+          userEmail,
+        },
+      });
+
+      return this.prisma.deal.update({
+        where: { id: dealId },
+        data: {
+          likes: {
+            increment: 1,
+          },
+        },
+      });
+    }
   }
 }

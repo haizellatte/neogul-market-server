@@ -1,11 +1,11 @@
-import { Deal, Prisma, User } from "@prisma/client";
+import { Deal, Prisma } from "@prisma/client";
 import { PrismaService } from "src/database/prisma/prisma.service";
 export declare class DealsService {
     private prisma;
     constructor(prisma: PrismaService);
-    createDeal(data: Prisma.DealCreateInput, user: Pick<User, "email">): Promise<Deal>;
-    getAllDeals(user: Pick<User, "email">): Promise<Deal[]>;
-    getDealById(id: number, user: Pick<User, "email">): Promise<Deal | null>;
-    updateDeal(id: number, user: Pick<User, "email">, data: Prisma.DealUpdateInput): Promise<Deal>;
-    deleteDeal(id: number, user: Pick<User, "email">): Promise<Deal>;
+    createDeal(data: Prisma.DealUncheckedCreateInput): Promise<Deal>;
+    getAllDeals(): Promise<Deal[]>;
+    getDealById(dealId: number): Promise<Deal | null>;
+    updateDeal(dealId: number, data: Prisma.DealUpdateInput): Promise<Deal>;
+    deleteDeal(dealId: number): Promise<Deal>;
 }
