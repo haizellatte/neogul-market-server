@@ -5,6 +5,7 @@ export declare class AuthService {
     private readonly prismaService;
     constructor(prismaService: PrismaService);
     generateAccessToken(user: Pick<User, "id" | "email">): Promise<string>;
+    refreshToken(user: User): Promise<string>;
     getUserByEmail(email: string): Promise<{
         id: string;
         email: string;

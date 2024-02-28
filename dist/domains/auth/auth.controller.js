@@ -14,6 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
+const DUser_1 = require("../../decorators/DUser");
 const jwt_auth_guard_1 = require("../../guards/jwt-auth.guard");
 const auth_dto_1 = require("./auth.dto");
 const auth_service_1 = require("./auth.service");
@@ -21,79 +22,53 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    async signUp(signUpDto, req, res) {
+    async signUp(signUpDto) {
         const accessToken = await this.authService.SignUp(signUpDto);
-        res.cookie("Authentication", accessToken, {
-            domain: "localhost",
-            path: "/",
-            secure: true,
-            httpOnly: true,
-            maxAge: 60 * 60 * 2000,
-        });
         return accessToken;
     }
-    async LogIn(LogInDto, res) {
+    async LogIn(LogInDto) {
         const accessToken = await this.authService.LogIn(LogInDto);
-        res.cookie("Authentication", accessToken, {
-            domain: "localhost",
-            path: "/",
-            secure: true,
-            httpOnly: true,
-            maxAge: 60 * 60 * 2000,
-        });
         return accessToken;
     }
-    async getCookies(req, res) {
-        const AuthenticationCookie = req.cookies["Authentication"];
-        return res.send(AuthenticationCookie);
-    }
-    logOut(req, res) {
-        res.cookie("Authentication", "cookie", {
-            domain: "localhost",
-            path: "/",
-            secure: true,
-            httpOnly: true,
-            maxAge: 0,
-        });
+    logOut(res) {
         return res.json("로그아웃 되었습니다.");
+    }
+    async refreshToken(user) {
+        const accessToken = await this.authService.refreshToken(user);
+        return accessToken;
     }
 };
 exports.AuthController = AuthController;
 __decorate([
     (0, common_1.Post)("/sign-up"),
     __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Req)()),
-    __param(2, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [auth_dto_1.UsersAuthDto, Object, Object]),
+    __metadata("design:paramtypes", [auth_dto_1.UsersAuthDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signUp", null);
 __decorate([
     (0, common_1.Post)("log-in"),
     __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [auth_dto_1.UsersAuthDto, Object]),
+    __metadata("design:paramtypes", [auth_dto_1.UsersAuthDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "LogIn", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)("/cookie"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Res)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", Promise)
-], AuthController.prototype, "getCookies", null);
-__decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Post)("/log-out"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Res)()),
+    __param(0, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "logOut", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)("refreshed-token"),
+    __param(0, (0, DUser_1.DUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "refreshToken", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)("auth"),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

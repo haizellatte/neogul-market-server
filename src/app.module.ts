@@ -3,7 +3,8 @@ import { ConfigModule } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
-// import { MulterModule } from "@nestjs/platform-express";
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { join } from "path";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { PrismaModule } from "./database/prisma/prisma.module";
@@ -22,9 +23,9 @@ import { JwtStrategy } from "./strategy/jwt.strategy";
       secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: "2h" },
     }),
-    // MulterModule.registerAsync({
-    //   useClass: MulterConfigService,
-    // }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, "..", "public/deal_Image"),
+    }),
     PassportModule,
     PrismaModule,
     DomainsModule,

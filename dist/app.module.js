@@ -12,6 +12,8 @@ const config_1 = require("@nestjs/config");
 const core_1 = require("@nestjs/core");
 const jwt_1 = require("@nestjs/jwt");
 const passport_1 = require("@nestjs/passport");
+const serve_static_1 = require("@nestjs/serve-static");
+const path_1 = require("path");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const prisma_module_1 = require("./database/prisma/prisma.module");
@@ -32,6 +34,9 @@ exports.AppModule = AppModule = __decorate([
             jwt_1.JwtModule.register({
                 secret: process.env.JWT_SECRET_KEY,
                 signOptions: { expiresIn: "2h" },
+            }),
+            serve_static_1.ServeStaticModule.forRoot({
+                rootPath: (0, path_1.join)(__dirname, "..", "public/deal_Image"),
             }),
             passport_1.PassportModule,
             prisma_module_1.PrismaModule,

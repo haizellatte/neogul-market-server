@@ -1,10 +1,11 @@
 /// <reference types="multer" />
-import { Deal, Prisma } from "@prisma/client";
+import { Deal, Prisma, User } from "@prisma/client";
 import { DealsService } from "./deals.service";
 export declare class DealsController {
     private readonly dealsService;
     constructor(dealsService: DealsService);
-    createDealPost(createDealDto: Prisma.DealCreateWithoutUserInput): Promise<{
+    uploadDealMainImg(file: Express.Multer.File): Promise<string>;
+    createDealPost(user: User, createDealDto: Prisma.DealCreateWithoutUserInput, file: Express.Multer.File): Promise<{
         id: number;
         title: string;
         content: string;
@@ -31,8 +32,7 @@ export declare class DealsController {
         createdAt: Date;
         updatedAt: Date;
     }>;
-    update(dealId: number, updateDealDto: Prisma.DealUpdateInput): Promise<Deal>;
-    remove(dealId: number): Promise<Deal>;
-    toggleLike(dealId: number): Promise<Deal>;
-    uploadDealMainImg(file: Express.Multer.File): Promise<Express.Multer.File>;
+    update(user: User, dealId: number, updateDealDto: Prisma.DealUpdateInput, file: Express.Multer.File): Promise<Deal>;
+    remove(user: User, dealId: number): Promise<Deal>;
+    toggleLike(user: User, dealId: number): Promise<Deal>;
 }

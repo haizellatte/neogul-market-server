@@ -12,14 +12,19 @@ export class AuthService {
   //* accessToken 발급
   async generateAccessToken(user: Pick<User, "id" | "email">): Promise<string> {
     const accessToken = sign(
-      { id: user.id, email: user.email },
+      { email: user.email },
       process.env.JWT_SECRET_KEY,
       {
         subject: String(user.id),
-        expiresIn: "2h",
+        expiresIn: "5m",
       },
     );
     return accessToken;
+  }
+
+  refreshToken(user: User) {
+    const refreshdAccessTocken = this.generateAccessToken(user);
+    return refreshdAccessTocken;
   }
 
   //* 사용자 찾기

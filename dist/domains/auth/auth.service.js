@@ -19,11 +19,15 @@ let AuthService = class AuthService {
         this.prismaService = prismaService;
     }
     async generateAccessToken(user) {
-        const accessToken = (0, jsonwebtoken_1.sign)({ id: user.id, email: user.email }, process.env.JWT_SECRET_KEY, {
+        const accessToken = (0, jsonwebtoken_1.sign)({ email: user.email }, process.env.JWT_SECRET_KEY, {
             subject: String(user.id),
-            expiresIn: "2h",
+            expiresIn: "5m",
         });
         return accessToken;
+    }
+    refreshToken(user) {
+        const refreshdAccessTocken = this.generateAccessToken(user);
+        return refreshdAccessTocken;
     }
     async getUserByEmail(email) {
         const user = await this.prismaService.user.findUnique({

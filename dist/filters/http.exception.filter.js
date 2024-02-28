@@ -14,6 +14,7 @@ let HttpExceptionFilter = class HttpExceptionFilter {
         const response = ctx.getResponse();
         const request = ctx.getRequest();
         const status = exception.getStatus();
+        console.log(response);
         response.status(status).json({
             success: false,
             result: null,

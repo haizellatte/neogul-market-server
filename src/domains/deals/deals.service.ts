@@ -101,18 +101,65 @@
 // }
 
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import * as fs from "fs/promises";
+import { join } from "path";
 import { PrismaService } from "src/database/prisma/prisma.service";
+import { v4 as uuid } from "uuid";
 
 @Injectable()
 export class DealsService {
   constructor(private prisma: PrismaService) {}
 
+  //* img-upload 저장하기 (create)
+  async uploadDealImg(file: Express.Multer.File) {
+    //* file 객체에 있는 버퍼 저장하기
+    const bufferImgFile = file.buffer;
+    //* unique한 name 만들어 저장
+    const fileName = uuid();
+    const extension = file.originalname.split(".").slice(-1)[0];
+    await fs.writeFile(
+      `./public/deal_Image/${fileName}.${extension}`,
+      bufferImgFile,
+      "base64",
+    );
+
+    const resultImgUrl = `${process.env.SERVER_URL}/deal_Image/${fileName}.${extension}`;
+
+    return resultImgUrl;
+  }
+
   //* create-deal
-  async createDeal(data: Prisma.DealUncheckedCreateInput) {
+  async createDeal(
+    data: Prisma.DealUncheckedCreateInput,
+    file: Express.Multer.File,
+  ) {
+    //* file 객체에 있는 버퍼 저장하기
+    const bufferImgFile = file.buffer;
+    //* unique한 name 만들어 저장
+    const fileName = uuid();
+    const extension = file.originalname.split(".").slice(-1)[0];
+    const path = join(
+      __dirname,
+      `./../../public/deal_Image`,
+      `${fileName}.${extension}`,
+    );
+
+    await fs.writeFile(path, bufferImgFile, "base64");
+
     return this.prisma.deal.create({
-      data,
+      data: {
+        title: data.title,
+        content: data.content,
+        price: data.price,
+        location: data.location,
+        imgUrl: `/${fileName}.${extension}`,
+        user: {
+          connect: {
+            email: data.userEmail,
+          },
+        },
+      },
     });
   }
 
@@ -141,10 +188,39 @@ export class DealsService {
   }
 
   //* update-deal
-  async updateDeal(dealId: number, data: Prisma.DealUpdateInput) {
+  async updateDeal(
+    dealId: number,
+    data: Prisma.DealUpdateInput,
+    file: Express.Multer.File,
+    user: User,
+  ) {
+    //* file 객체에 있는 버퍼 저장하기
+    const bufferImgFile = file.buffer;
+    //* unique한 name 만들어 저장
+    const fileName = uuid();
+    const extension = file.originalname.split(".").slice(-1)[0];
+    const path = join(
+      __dirname,
+      `./../../public/deal_Image`,
+      `${fileName}.${extension}`,
+    );
+
+    await fs.writeFile(path, bufferImgFile, "base64");
+
     const deal = this.prisma.deal.update({
       where: { id: dealId },
-      data,
+      data: {
+        title: data.title,
+        content: data.content,
+        price: data.price,
+        location: data.location,
+        imgUrl: `/${fileName}.${extension}`,
+        user: {
+          connect: {
+            email: user.email,
+          },
+        },
+      },
     });
 
     if (!deal)
@@ -157,26 +233,22 @@ export class DealsService {
   }
 
   //* delete-deal
-  async deleteDeal(dealId: number) {
+  async deleteDeal(dealId: number, user: User) {
     return this.prisma.deal.delete({
-      where: { id: dealId },
+      where: {
+        id: dealId,
+        userEmail: user.email,
+      },
     });
   }
 
-  //* img-upload
-  async uploadDealImg(file: Express.Multer.File) {
-    await fs.writeFile(`./public/${file.originalname}`, file.buffer, "base64");
-
-    return file;
-  }
-
   //* toggle-like
-  async toggleLike(dealId: number) {
+  async toggleLike(dealId: number, user: User) {
     const like = await this.prisma.like.findUnique({
       where: {
         dealId_userEmail: {
           dealId,
-          userEmail: "user1@naver.com",
+          userEmail: user.email,
         },
       },
     });

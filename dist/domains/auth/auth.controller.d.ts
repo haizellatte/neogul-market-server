@@ -1,15 +1,16 @@
-import { Request, Response } from "express";
+import { User } from "@prisma/client";
+import { Response } from "express";
 import { UsersAuthDto } from "./auth.dto";
 import { AuthService } from "./auth.service";
 export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
-    signUp(signUpDto: UsersAuthDto, req: Request, res: Response): Promise<{
+    signUp(signUpDto: UsersAuthDto): Promise<{
         accessToken: string;
     }>;
-    LogIn(LogInDto: UsersAuthDto, res: Response): Promise<{
+    LogIn(LogInDto: UsersAuthDto): Promise<{
         accessToken: string;
     }>;
-    getCookies(req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
-    logOut(req: Request, res: Response): Response<any, Record<string, any>>;
+    logOut(res: Response): Response<any, Record<string, any>>;
+    refreshToken(user: User): Promise<string>;
 }
