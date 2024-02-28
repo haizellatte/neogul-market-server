@@ -14,16 +14,16 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DealsController = void 0;
 const common_1 = require("@nestjs/common");
+const platform_express_1 = require("@nestjs/platform-express");
 const client_1 = require("@prisma/client");
-const DUser_1 = require("../../decorators/DUser");
 const user_only_1 = require("../../decorators/user.only");
 const deals_service_1 = require("./deals.service");
 let DealsController = class DealsController {
     constructor(dealsService) {
         this.dealsService = dealsService;
     }
-    async createDealPost(user, createDealDto) {
-        const DealDto = { ...createDealDto, userEmail: user.email };
+    async createDealPost(createDealDto) {
+        const DealDto = { ...createDealDto, userEmail: "user1@naver.com" };
         return this.dealsService.createDeal(DealDto);
     }
     findAll() {
@@ -38,8 +38,8 @@ let DealsController = class DealsController {
     remove(dealId) {
         return this.dealsService.deleteDeal(dealId);
     }
-    toggleLike(user, dealId) {
-        return this.dealsService.toggleLike(dealId, user.email);
+    toggleLike(dealId) {
+        return this.dealsService.toggleLike(dealId);
     }
     async uploadDealMainImg(file) {
         return this.dealsService.uploadDealImg(file);
@@ -49,10 +49,9 @@ exports.DealsController = DealsController;
 __decorate([
     (0, common_1.Post)("/create"),
     (0, user_only_1.UserOnly)(),
-    __param(0, (0, DUser_1.DUser)()),
-    __param(1, (0, common_1.Body)()),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], DealsController.prototype, "createDealPost", null);
 __decorate([
@@ -66,7 +65,7 @@ __decorate([
     __param(0, (0, common_1.Param)("dealId", common_1.ParseIntPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], DealsController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)(":dealId"),
@@ -77,7 +76,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], DealsController.prototype, "update", null);
 __decorate([
-    (0, common_1.Delete)("dealId"),
+    (0, common_1.Delete)(":dealId"),
     __param(0, (0, common_1.Param)("dealId", common_1.ParseIntPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -85,13 +84,13 @@ __decorate([
 ], DealsController.prototype, "remove", null);
 __decorate([
     (0, common_1.Patch)(":dealId/toggle-like"),
-    __param(0, (0, DUser_1.DUser)()),
-    __param(1, (0, common_1.Param)("dealId", common_1.ParseIntPipe)),
+    __param(0, (0, common_1.Param)("dealId", common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Number]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], DealsController.prototype, "toggleLike", null);
 __decorate([
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)("file")),
     (0, common_1.Post)(":dealId/img-upload"),
     __param(0, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),

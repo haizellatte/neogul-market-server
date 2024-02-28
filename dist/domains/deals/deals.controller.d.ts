@@ -1,15 +1,38 @@
 /// <reference types="multer" />
-import { Deal, Prisma, User } from "@prisma/client";
-import { CreateDealPostDto } from "./deals.dto";
+import { Deal, Prisma } from "@prisma/client";
 import { DealsService } from "./deals.service";
 export declare class DealsController {
     private readonly dealsService;
     constructor(dealsService: DealsService);
-    createDealPost(user: User, createDealDto: CreateDealPostDto): Promise<Deal>;
+    createDealPost(createDealDto: Prisma.DealCreateWithoutUserInput): Promise<{
+        id: number;
+        title: string;
+        content: string;
+        location: string;
+        price: number;
+        likes: number;
+        views: number;
+        imgUrl: string;
+        userEmail: string;
+        createdAt: Date;
+        updatedAt: Date;
+    }>;
     findAll(): Promise<Deal[]>;
-    findOne(dealId: number): Promise<Deal | null>;
+    findOne(dealId: number): Promise<{
+        id: number;
+        title: string;
+        content: string;
+        location: string;
+        price: number;
+        likes: number;
+        views: number;
+        imgUrl: string;
+        userEmail: string;
+        createdAt: Date;
+        updatedAt: Date;
+    }>;
     update(dealId: number, updateDealDto: Prisma.DealUpdateInput): Promise<Deal>;
     remove(dealId: number): Promise<Deal>;
-    toggleLike(user: User, dealId: number): Promise<Deal>;
+    toggleLike(dealId: number): Promise<Deal>;
     uploadDealMainImg(file: Express.Multer.File): Promise<Express.Multer.File>;
 }

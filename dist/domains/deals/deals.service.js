@@ -26,15 +26,27 @@ let DealsService = class DealsService {
         return this.prisma.deal.findMany();
     }
     async getDealById(dealId) {
-        return this.prisma.deal.findUnique({
+        const result = await this.prisma.deal.findUnique({
             where: { id: dealId },
         });
+        await this.prisma.deal.update({
+            where: { id: dealId },
+            data: {
+                views: {
+                    increment: 1,
+                },
+            },
+        });
+        return result;
     }
     async updateDeal(dealId, data) {
-        return this.prisma.deal.update({
+        const deal = this.prisma.deal.update({
             where: { id: dealId },
             data,
         });
+        if (!deal)
+            throw new common_1.HttpException("해당 게시물이 존재하지 않습니다", common_1.HttpStatus.NOT_FOUND);
+        return deal;
     }
     async deleteDeal(dealId) {
         return this.prisma.deal.delete({
@@ -45,12 +57,12 @@ let DealsService = class DealsService {
         await fs.writeFile(`./public/${file.originalname}`, file.buffer, "base64");
         return file;
     }
-    async toggleLike(dealId, userEmail) {
+    async toggleLike(dealId) {
         const like = await this.prisma.like.findUnique({
             where: {
                 dealId_userEmail: {
                     dealId,
-                    userEmail,
+                    userEmail: "user1@naver.com",
                 },
             },
         });
@@ -73,7 +85,7 @@ let DealsService = class DealsService {
             await this.prisma.like.create({
                 data: {
                     dealId,
-                    userEmail,
+                    userEmail: "user1@naver.com",
                 },
             });
             return this.prisma.deal.update({

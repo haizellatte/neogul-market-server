@@ -16,7 +16,8 @@ exports.DealsModule = DealsModule;
 exports.DealsModule = DealsModule = __decorate([
     (0, common_1.Module)({
         controllers: [deals_controller_1.DealsController],
-        providers: [deals_service_1.DealsService]
+        providers: [deals_service_1.DealsService],
+        exports: [deals_service_1.DealsService],
     })
 ], DealsModule);
 //# sourceMappingURL=deals.module.js.map
