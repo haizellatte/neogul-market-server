@@ -21,7 +21,7 @@ let AuthService = class AuthService {
     async generateAccessToken(user) {
         const accessToken = (0, jsonwebtoken_1.sign)({ email: user.email }, process.env.JWT_SECRET_KEY, {
             subject: String(user.id),
-            expiresIn: "5m",
+            expiresIn: "2h",
         });
         return accessToken;
     }
@@ -72,6 +72,16 @@ let AuthService = class AuthService {
             throw new common_1.BadRequestException("Invalid email or password");
         const accessToken = await this.generateAccessToken(user);
         return { accessToken };
+    }
+    async LogOut(user) {
+        const loggedOutUser = await this.prismaService.user.delete({
+            where: {
+                email: user.email,
+            },
+        });
+        if (!loggedOutUser)
+            throw new common_1.BadRequestException("존재하지 않은 유저입니다.");
+        return loggedOutUser;
     }
 };
 exports.AuthService = AuthService;

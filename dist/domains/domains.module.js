@@ -10,12 +10,13 @@ exports.DomainsModule = void 0;
 const common_1 = require("@nestjs/common");
 const auth_module_1 = require("./auth/auth.module");
 const deals_module_1 = require("./deals/deals.module");
+const my_module_1 = require("./my/my.module");
 let DomainsModule = class DomainsModule {
 };
 exports.DomainsModule = DomainsModule;
 exports.DomainsModule = DomainsModule = __decorate([
     (0, common_1.Module)({
-        imports: [auth_module_1.AuthModule, deals_module_1.DealsModule],
+        imports: [auth_module_1.AuthModule, deals_module_1.DealsModule, my_module_1.MyModule],
         exports: [auth_module_1.AuthModule, deals_module_1.DealsModule],
     })
 ], DomainsModule);

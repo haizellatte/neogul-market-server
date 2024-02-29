@@ -2,10 +2,9 @@
 import { Prisma, User } from "@prisma/client";
 import { PrismaService } from "src/database/prisma/prisma.service";
 export declare class DealsService {
-    private prisma;
-    constructor(prisma: PrismaService);
-    uploadDealImg(file: Express.Multer.File): Promise<string>;
-    createDeal(data: Prisma.DealUncheckedCreateInput, file: Express.Multer.File): Promise<{
+    private prismaService;
+    constructor(prismaService: PrismaService);
+    createDeal(data: Prisma.DealUncheckedCreateInput, file: Express.Multer.File, user: User): Promise<{
         id: number;
         title: string;
         content: string;

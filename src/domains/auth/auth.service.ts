@@ -15,13 +15,16 @@ export class AuthService {
       { email: user.email },
       process.env.JWT_SECRET_KEY,
       {
+        // id ❗️❗️❗️❗️❗️
         subject: String(user.id),
-        expiresIn: "5m",
+        // expiresIn: "5m",
+        expiresIn: "2h",
       },
     );
     return accessToken;
   }
 
+  //* refreshToken 발급
   refreshToken(user: User) {
     const refreshdAccessTocken = this.generateAccessToken(user);
     return refreshdAccessTocken;
@@ -88,5 +91,19 @@ export class AuthService {
 
     const accessToken = await this.generateAccessToken(user);
     return { accessToken };
+  }
+
+  //* log-out
+  async LogOut(user: Pick<User, "id" | "email">) {
+    const loggedOutUser = await this.prismaService.user.delete({
+      where: {
+        email: user.email,
+      },
+    });
+
+    if (!loggedOutUser)
+      throw new BadRequestException("존재하지 않은 유저입니다.");
+
+    return loggedOutUser;
   }
 }

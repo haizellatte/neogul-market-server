@@ -10,8 +10,7 @@ import { AppService } from "./app.service";
 import { PrismaModule } from "./database/prisma/prisma.module";
 import { DealsModule } from "./domains/deals/deals.module";
 import { DomainsModule } from "./domains/domains.module";
-import { JwtAuthGuard } from "./guards/jwt-auth.guard";
-import { JwtStrategy } from "./strategy/jwt.strategy";
+import { AuthGuard } from "./guards/auth.guard";
 
 @Module({
   imports: [
@@ -24,18 +23,14 @@ import { JwtStrategy } from "./strategy/jwt.strategy";
       signOptions: { expiresIn: "2h" },
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, "..", "public/deal_Image"),
+      rootPath: join(__dirname, "..", "/public/deal_Image"),
     }),
     PassportModule,
     PrismaModule,
     DomainsModule,
     DealsModule,
   ],
-  providers: [
-    AppService,
-    JwtStrategy,
-    { useClass: JwtAuthGuard, provide: APP_GUARD },
-  ],
+  providers: [AppService, { useClass: AuthGuard, provide: APP_GUARD }],
   controllers: [AppController],
 })
 export class AppModule {}

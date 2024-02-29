@@ -1,8 +1,7 @@
-import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Post } from "@nestjs/common";
 import { User } from "@prisma/client";
-import { Response } from "express";
 import { DUser } from "src/decorators/DUser";
-import { JwtAuthGuard } from "src/guards/jwt-auth.guard";
+import { Private } from "src/decorators/Private";
 import { UsersAuthDto } from "./auth.dto";
 import { AuthService } from "./auth.service";
 
@@ -25,17 +24,24 @@ export class AuthController {
   }
 
   //* log-out
-  @UseGuards(JwtAuthGuard)
-  @Post("/log-out")
-  logOut(@Res() res: Response) {
-    return res.json("로그아웃 되었습니다.");
+  // @UseGuards(JwtAuthGuard)
+  @Private("user")
+  @Delete("/log-out")
+  logOut(@DUser() user: User) {
+    return this.authService.LogOut(user);
   }
 
   //* refreshToken 발급
-  @UseGuards(JwtAuthGuard)
-  @Get("refreshed-token")
+  // @UseGuards(JwtAuthGuard)
+  @Private("user")
+  @Get("refresh-token")
   async refreshToken(@DUser() user: User) {
-    const accessToken = await this.authService.refreshToken(user);
+    const accessToken = await this.authService.refreshToken(user!);
     return accessToken;
+  }
+
+  @Get("/")
+  async findUser(@DUser() user: User) {
+    return user;
   }
 }

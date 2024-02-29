@@ -18,4 +18,10 @@ export declare class AuthService {
     LogIn(logInDto: UsersAuthDto): Promise<{
         accessToken: string;
     }>;
+    LogOut(user: Pick<User, "id" | "email">): Promise<{
+        id: string;
+        email: string;
+        encryptedPassword: string;
+        createdAt: Date;
+    }>;
 }

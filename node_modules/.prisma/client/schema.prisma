@@ -30,7 +30,7 @@ model Deal {
   price     Int
   likes     Int      @default(0)
   views     Int      @default(0)
-  imgUrl    String?
+  imgUrl    String
   user      User     @relation(fields: [userEmail], references: [email])
   userEmail String
   createdAt DateTime @default(now())

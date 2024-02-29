@@ -4,8 +4,7 @@ import { DealsService } from "./deals.service";
 export declare class DealsController {
     private readonly dealsService;
     constructor(dealsService: DealsService);
-    uploadDealMainImg(file: Express.Multer.File): Promise<string>;
-    createDealPost(user: User, createDealDto: Prisma.DealCreateWithoutUserInput, file: Express.Multer.File): Promise<{
+    createDealPost(user: User, createDealDto: any, file: Express.Multer.File): Promise<{
         id: number;
         title: string;
         content: string;

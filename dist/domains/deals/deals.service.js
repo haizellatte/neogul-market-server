@@ -16,46 +16,38 @@ const path_1 = require("path");
 const prisma_service_1 = require("../../database/prisma/prisma.service");
 const uuid_1 = require("uuid");
 let DealsService = class DealsService {
-    constructor(prisma) {
-        this.prisma = prisma;
+    constructor(prismaService) {
+        this.prismaService = prismaService;
     }
-    async uploadDealImg(file) {
+    async createDeal(data, file, user) {
         const bufferImgFile = file.buffer;
         const fileName = (0, uuid_1.v4)();
-        const extension = file.originalname.split(".").slice(-1)[0];
-        await fs.writeFile(`./public/deal_Image/${fileName}.${extension}`, bufferImgFile, "base64");
-        const resultImgUrl = `${process.env.SERVER_URL}/deal_Image/${fileName}.${extension}`;
-        return resultImgUrl;
-    }
-    async createDeal(data, file) {
-        const bufferImgFile = file.buffer;
-        const fileName = (0, uuid_1.v4)();
-        const extension = file.originalname.split(".").slice(-1)[0];
-        const path = (0, path_1.join)(__dirname, `./../../public/deal_Image`, `${fileName}.${extension}`);
-        await fs.writeFile(path, bufferImgFile, "base64");
-        return this.prisma.deal.create({
+        const fileExtension = file.originalname.split(".").slice(-1);
+        const path = (0, path_1.join)(__dirname, `../../../public/deal_Image`, `${fileName}.${fileExtension}`);
+        await fs.writeFile(path, bufferImgFile);
+        return this.prismaService.deal.create({
             data: {
                 title: data.title,
                 content: data.content,
-                price: data.price,
+                price: Number(data.price),
                 location: data.location,
-                imgUrl: `/${fileName}.${extension}`,
-                user: {
-                    connect: {
-                        email: data.userEmail,
-                    },
-                },
+                imgUrl: `${fileName}.${fileExtension}`,
+                userEmail: user.email,
             },
         });
     }
     async getAllDeals() {
-        return this.prisma.deal.findMany();
+        return this.prismaService.deal.findMany({
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
     }
     async getDealById(dealId) {
-        const result = await this.prisma.deal.findUnique({
+        const result = await this.prismaService.deal.findUnique({
             where: { id: dealId },
         });
-        await this.prisma.deal.update({
+        await this.prismaService.deal.update({
             where: { id: dealId },
             data: {
                 views: {
@@ -68,22 +60,18 @@ let DealsService = class DealsService {
     async updateDeal(dealId, data, file, user) {
         const bufferImgFile = file.buffer;
         const fileName = (0, uuid_1.v4)();
-        const extension = file.originalname.split(".").slice(-1)[0];
-        const path = (0, path_1.join)(__dirname, `./../../public/deal_Image`, `${fileName}.${extension}`);
-        await fs.writeFile(path, bufferImgFile, "base64");
-        const deal = this.prisma.deal.update({
+        const fileExtension = file.originalname.split(".").slice(-1);
+        const path = (0, path_1.join)(__dirname, `../../../public/deal_Image`, `${fileName}.${fileExtension}`);
+        await fs.writeFile(path, bufferImgFile);
+        const deal = this.prismaService.deal.update({
             where: { id: dealId },
             data: {
                 title: data.title,
                 content: data.content,
-                price: data.price,
+                price: Number(data.price),
                 location: data.location,
-                imgUrl: `/${fileName}.${extension}`,
-                user: {
-                    connect: {
-                        email: user.email,
-                    },
-                },
+                imgUrl: `${fileName}.${fileExtension}`,
+                userEmail: user.email,
             },
         });
         if (!deal)
@@ -91,7 +79,7 @@ let DealsService = class DealsService {
         return deal;
     }
     async deleteDeal(dealId, user) {
-        return this.prisma.deal.delete({
+        return this.prismaService.deal.delete({
             where: {
                 id: dealId,
                 userEmail: user.email,
@@ -99,7 +87,7 @@ let DealsService = class DealsService {
         });
     }
     async toggleLike(dealId, user) {
-        const like = await this.prisma.like.findUnique({
+        const like = await this.prismaService.like.findUnique({
             where: {
                 dealId_userEmail: {
                     dealId,
@@ -108,12 +96,12 @@ let DealsService = class DealsService {
             },
         });
         if (like) {
-            await this.prisma.like.delete({
+            await this.prismaService.like.delete({
                 where: {
                     id: like.id,
                 },
             });
-            return this.prisma.deal.update({
+            return this.prismaService.deal.update({
                 where: { id: dealId },
                 data: {
                     likes: {
@@ -123,13 +111,13 @@ let DealsService = class DealsService {
             });
         }
         else {
-            await this.prisma.like.create({
+            await this.prismaService.like.create({
                 data: {
                     dealId,
-                    userEmail: "user1@naver.com",
+                    userEmail: user.email,
                 },
             });
-            return this.prisma.deal.update({
+            return this.prismaService.deal.update({
                 where: { id: dealId },
                 data: {
                     likes: {

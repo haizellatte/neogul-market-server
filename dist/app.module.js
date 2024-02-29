@@ -19,8 +19,7 @@ const app_service_1 = require("./app.service");
 const prisma_module_1 = require("./database/prisma/prisma.module");
 const deals_module_1 = require("./domains/deals/deals.module");
 const domains_module_1 = require("./domains/domains.module");
-const jwt_auth_guard_1 = require("./guards/jwt-auth.guard");
-const jwt_strategy_1 = require("./strategy/jwt.strategy");
+const auth_guard_1 = require("./guards/auth.guard");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -36,18 +35,14 @@ exports.AppModule = AppModule = __decorate([
                 signOptions: { expiresIn: "2h" },
             }),
             serve_static_1.ServeStaticModule.forRoot({
-                rootPath: (0, path_1.join)(__dirname, "..", "public/deal_Image"),
+                rootPath: (0, path_1.join)(__dirname, "..", "/public/deal_Image"),
             }),
             passport_1.PassportModule,
             prisma_module_1.PrismaModule,
             domains_module_1.DomainsModule,
             deals_module_1.DealsModule,
         ],
-        providers: [
-            app_service_1.AppService,
-            jwt_strategy_1.JwtStrategy,
-            { useClass: jwt_auth_guard_1.JwtAuthGuard, provide: core_1.APP_GUARD },
-        ],
+        providers: [app_service_1.AppService, { useClass: auth_guard_1.AuthGuard, provide: core_1.APP_GUARD }],
         controllers: [app_controller_1.AppController],
     })
 ], AppModule);

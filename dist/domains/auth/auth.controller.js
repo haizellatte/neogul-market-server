@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const DUser_1 = require("../../decorators/DUser");
-const jwt_auth_guard_1 = require("../../guards/jwt-auth.guard");
+const Private_1 = require("../../decorators/Private");
 const auth_dto_1 = require("./auth.dto");
 const auth_service_1 = require("./auth.service");
 let AuthController = class AuthController {
@@ -30,12 +30,15 @@ let AuthController = class AuthController {
         const accessToken = await this.authService.LogIn(LogInDto);
         return accessToken;
     }
-    logOut(res) {
-        return res.json("로그아웃 되었습니다.");
+    logOut(user) {
+        return this.authService.LogOut(user);
     }
     async refreshToken(user) {
         const accessToken = await this.authService.refreshToken(user);
         return accessToken;
+    }
+    async findUser(user) {
+        return user;
     }
 };
 exports.AuthController = AuthController;
@@ -54,21 +57,28 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "LogIn", null);
 __decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Post)("/log-out"),
-    __param(0, (0, common_1.Res)()),
+    (0, Private_1.Private)("user"),
+    (0, common_1.Delete)("/log-out"),
+    __param(0, (0, DUser_1.DUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "logOut", null);
 __decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)("refreshed-token"),
+    (0, Private_1.Private)("user"),
+    (0, common_1.Get)("refresh-token"),
     __param(0, (0, DUser_1.DUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "refreshToken", null);
+__decorate([
+    (0, common_1.Get)("/"),
+    __param(0, (0, DUser_1.DUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "findUser", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)("auth"),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
