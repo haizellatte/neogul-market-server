@@ -1,9 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { Prisma, User } from "@prisma/client";
-import * as fs from "fs/promises";
-import { join } from "path";
-import { PrismaService } from "src/database/prisma/prisma.service";
-import { v4 as uuid } from "uuid";
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Prisma, User } from '@prisma/client';
+import * as fs from 'fs/promises';
+import { join } from 'path';
+import { PrismaService } from 'src/database/prisma/prisma.service';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class DealsService {
@@ -21,7 +21,7 @@ export class DealsService {
     //* 2. unique한 name 만들어 저장
     const fileName = uuid();
     //* 3. 파일 확장자
-    const fileExtension = file.originalname.split(".").slice(-1);
+    const fileExtension = file.originalname.split('.').slice(-1);
 
     const path = join(
       __dirname,
@@ -37,7 +37,7 @@ export class DealsService {
         content: data.content,
         price: Number(data.price),
         location: data.location,
-        imgUrl: `${fileName}.${fileExtension}`,
+        imgUrl: `/deal_Image/${fileName}.${fileExtension}`,
         userEmail: user.email,
       },
     });
@@ -47,7 +47,7 @@ export class DealsService {
   async getAllDeals() {
     return this.prismaService.deal.findMany({
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'desc',
       },
     });
   }
@@ -84,7 +84,7 @@ export class DealsService {
     //* 2. unique한 name 만들어 저장
     const fileName = uuid();
     //* 3. 파일 확장자
-    const fileExtension = file.originalname.split(".").slice(-1);
+    const fileExtension = file.originalname.split('.').slice(-1);
 
     const path = join(
       __dirname,
@@ -108,7 +108,7 @@ export class DealsService {
 
     if (!deal)
       throw new HttpException(
-        "해당 게시물이 존재하지 않습니다",
+        '해당 게시물이 존재하지 않습니다',
         HttpStatus.NOT_FOUND,
       );
 
