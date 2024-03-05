@@ -44,45 +44,45 @@ let AuthController = class AuthController {
 };
 exports.AuthController = AuthController;
 __decorate([
-    (0, common_1.Post)("/sign-up"),
+    (0, common_1.Post)('/sign-up'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [auth_dto_1.UsersAuthDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signUp", null);
 __decorate([
-    (0, common_1.Post)("log-in"),
+    (0, common_1.Post)('log-in'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [auth_dto_1.UsersAuthDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "LogIn", null);
 __decorate([
-    (0, Private_1.Private)("user"),
-    (0, common_1.Delete)("/log-out"),
+    (0, Private_1.Private)('user'),
+    (0, common_1.Delete)('/log-out'),
     __param(0, (0, DUser_1.DUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "logOut", null);
 __decorate([
-    (0, Private_1.Private)("user"),
-    (0, common_1.Get)("refresh-token"),
+    (0, Private_1.Private)('user'),
+    (0, common_1.Get)('refresh-token'),
     __param(0, (0, DUser_1.DUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "refreshToken", null);
 __decorate([
-    (0, Private_1.Private)("user"),
-    (0, common_1.Get)("/user-email"),
+    (0, Private_1.Private)('user'),
+    (0, common_1.Get)('/user-email'),
     __param(0, (0, DUser_1.DUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "findUser", null);
 exports.AuthController = AuthController = __decorate([
-    (0, common_1.Controller)("auth"),
+    (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
 //# sourceMappingURL=auth.controller.js.map

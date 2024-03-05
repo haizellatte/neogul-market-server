@@ -21,7 +21,7 @@ let AuthService = class AuthService {
     async generateAccessToken(user) {
         const accessToken = (0, jsonwebtoken_1.sign)({ email: user.email }, process.env.JWT_SECRET_KEY, {
             subject: String(user.id),
-            expiresIn: "2h",
+            expiresIn: '2h',
         });
         return accessToken;
     }
@@ -36,7 +36,7 @@ let AuthService = class AuthService {
             },
         });
         if (!user)
-            throw new common_1.BadRequestException("Invalid email or password");
+            throw new common_1.BadRequestException('Invalid email or password');
         return user;
     }
     async SignUp(signUpDto) {
@@ -47,7 +47,7 @@ let AuthService = class AuthService {
             },
         });
         if (findUser)
-            throw new common_1.BadRequestException("User is already exists!");
+            throw new common_1.BadRequestException('User is already exists!');
         const encryptedPassword = await (0, bcrypt_1.hash)(password, 15);
         const user = await this.prismaService.user.create({
             data: {
@@ -66,10 +66,10 @@ let AuthService = class AuthService {
             },
         });
         if (!user)
-            throw new common_1.BadRequestException("Invalid email or password");
+            throw new common_1.BadRequestException('Invalid email or password');
         const encryptedPassword = await (0, bcrypt_1.compare)(password, user.encryptedPassword);
         if (!encryptedPassword)
-            throw new common_1.BadRequestException("Invalid email or password");
+            throw new common_1.BadRequestException('Invalid email or password');
         const accessToken = await this.generateAccessToken(user);
         return { accessToken };
     }
@@ -80,7 +80,7 @@ let AuthService = class AuthService {
             },
         });
         if (!loggedOutUser)
-            throw new common_1.BadRequestException("존재하지 않은 유저입니다.");
+            throw new common_1.BadRequestException('존재하지 않은 유저입니다.');
         return loggedOutUser;
     }
     async UserEmail(user) {

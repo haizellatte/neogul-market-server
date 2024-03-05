@@ -1,10 +1,10 @@
-import { User } from "@prisma/client";
-import { PrismaService } from "src/database/prisma/prisma.service";
-import { UsersAuthDto } from "./auth.dto";
+import { User } from '@prisma/client';
+import { PrismaService } from 'src/database/prisma/prisma.service';
+import { UsersAuthDto } from './auth.dto';
 export declare class AuthService {
     private readonly prismaService;
     constructor(prismaService: PrismaService);
-    generateAccessToken(user: Pick<User, "id" | "email">): Promise<string>;
+    generateAccessToken(user: Pick<User, 'id' | 'email'>): Promise<string>;
     refreshToken(user: User): Promise<string>;
     getUserByEmail(email: string): Promise<{
         id: string;
@@ -18,13 +18,13 @@ export declare class AuthService {
     LogIn(logInDto: UsersAuthDto): Promise<{
         accessToken: string;
     }>;
-    LogOut(user: Pick<User, "id" | "email">): Promise<{
+    LogOut(user: Pick<User, 'id' | 'email'>): Promise<{
         id: string;
         email: string;
         encryptedPassword: string;
         createdAt: Date;
     }>;
-    UserEmail(user: Pick<User, "email">): Promise<{
+    UserEmail(user: Pick<User, 'email'>): Promise<{
         email: string;
     }>;
 }

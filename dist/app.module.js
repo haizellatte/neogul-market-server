@@ -28,14 +28,14 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
-                envFilePath: ".env",
+                envFilePath: '.env',
             }),
             jwt_1.JwtModule.register({
                 secret: process.env.JWT_SECRET_KEY,
-                signOptions: { expiresIn: "2h" },
+                signOptions: { expiresIn: '2h' },
             }),
             serve_static_1.ServeStaticModule.forRoot({
-                rootPath: (0, path_1.join)(__dirname, "..", "/public/deal_Image"),
+                rootPath: (0, path_1.join)(__dirname, '..', '/public'),
             }),
             passport_1.PassportModule,
             prisma_module_1.PrismaModule,
