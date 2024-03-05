@@ -1,3 +1,4 @@
+/// <reference types="cookie-parser" />
 import { NestMiddleware } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Request, Response } from "express";

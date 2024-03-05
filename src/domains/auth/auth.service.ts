@@ -1,16 +1,16 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { User } from "@prisma/client";
-import { compare, hash } from "bcrypt";
-import { sign } from "jsonwebtoken";
-import { PrismaService } from "src/database/prisma/prisma.service";
-import { UsersAuthDto } from "./auth.dto";
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { User } from '@prisma/client';
+import { compare, hash } from 'bcrypt';
+import { sign } from 'jsonwebtoken';
+import { PrismaService } from 'src/database/prisma/prisma.service';
+import { UsersAuthDto } from './auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly prismaService: PrismaService) {}
 
   //* accessToken 발급
-  async generateAccessToken(user: Pick<User, "id" | "email">): Promise<string> {
+  async generateAccessToken(user: Pick<User, 'id' | 'email'>): Promise<string> {
     const accessToken = sign(
       { email: user.email },
       process.env.JWT_SECRET_KEY,
@@ -18,7 +18,7 @@ export class AuthService {
         // id ❗️❗️❗️❗️❗️
         subject: String(user.id),
         // expiresIn: "5m",
-        expiresIn: "2h",
+        expiresIn: '2h',
       },
     );
     return accessToken;
@@ -38,7 +38,7 @@ export class AuthService {
       },
     });
 
-    if (!user) throw new BadRequestException("Invalid email or password");
+    if (!user) throw new BadRequestException('Invalid email or password');
 
     return user;
   }
@@ -55,7 +55,7 @@ export class AuthService {
         email,
       },
     });
-    if (findUser) throw new BadRequestException("User is already exists!");
+    if (findUser) throw new BadRequestException('User is already exists!');
 
     const encryptedPassword = await hash(password, 15);
 
@@ -83,18 +83,18 @@ export class AuthService {
       },
     });
 
-    if (!user) throw new BadRequestException("Invalid email or password");
+    if (!user) throw new BadRequestException('Invalid email or password');
 
     const encryptedPassword = await compare(password, user.encryptedPassword);
     if (!encryptedPassword)
-      throw new BadRequestException("Invalid email or password");
+      throw new BadRequestException('Invalid email or password');
 
     const accessToken = await this.generateAccessToken(user);
     return { accessToken };
   }
 
   //* log-out
-  async LogOut(user: Pick<User, "id" | "email">) {
+  async LogOut(user: Pick<User, 'id' | 'email'>) {
     const loggedOutUser = await this.prismaService.user.delete({
       where: {
         email: user.email,
@@ -102,8 +102,20 @@ export class AuthService {
     });
 
     if (!loggedOutUser)
-      throw new BadRequestException("존재하지 않은 유저입니다.");
+      throw new BadRequestException('존재하지 않은 유저입니다.');
 
     return loggedOutUser;
+  }
+
+  async UserEmail(user: Pick<User, 'email'>) {
+    const FindUser = await this.prismaService.user.findUnique({
+      where: {
+        email: user.email,
+      },
+      select: {
+        email: true,
+      },
+    });
+    return FindUser;
   }
 }

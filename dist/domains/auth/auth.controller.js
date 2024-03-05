@@ -38,7 +38,8 @@ let AuthController = class AuthController {
         return accessToken;
     }
     async findUser(user) {
-        return user;
+        const findUser = await this.authService.UserEmail(user);
+        return findUser;
     }
 };
 exports.AuthController = AuthController;
@@ -73,7 +74,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "refreshToken", null);
 __decorate([
-    (0, common_1.Get)("/"),
+    (0, Private_1.Private)("user"),
+    (0, common_1.Get)("/user-email"),
     __param(0, (0, DUser_1.DUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

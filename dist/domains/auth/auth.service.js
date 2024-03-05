@@ -83,6 +83,17 @@ let AuthService = class AuthService {
             throw new common_1.BadRequestException("존재하지 않은 유저입니다.");
         return loggedOutUser;
     }
+    async UserEmail(user) {
+        const FindUser = await this.prismaService.user.findUnique({
+            where: {
+                email: user.email,
+            },
+            select: {
+                email: true,
+            },
+        });
+        return FindUser;
+    }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([

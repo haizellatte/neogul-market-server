@@ -18,9 +18,6 @@ export declare class AuthController {
     }>;
     refreshToken(user: User): Promise<string>;
     findUser(user: User): Promise<{
-        id: string;
         email: string;
-        encryptedPassword: string;
-        createdAt: Date;
     }>;
 }

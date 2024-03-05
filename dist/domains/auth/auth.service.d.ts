@@ -24,4 +24,7 @@ export declare class AuthService {
         encryptedPassword: string;
         createdAt: Date;
     }>;
+    UserEmail(user: Pick<User, "email">): Promise<{
+        email: string;
+    }>;
 }
