@@ -25,7 +25,7 @@ export class DealsService {
 
     const path = join(
       __dirname,
-      `../../../public/deal_Image`,
+      `../../../public/images`,
       `${fileName}.${fileExtension}`,
     );
 
@@ -37,7 +37,7 @@ export class DealsService {
         content: data.content,
         price: Number(data.price),
         location: data.location,
-        imgUrl: `/deal_Image/${fileName}.${fileExtension}`,
+        imgUrl: `/images/${fileName}.${fileExtension}`,
         userEmail: user.email,
       },
     });
