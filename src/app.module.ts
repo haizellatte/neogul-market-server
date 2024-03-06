@@ -23,7 +23,7 @@ import { AuthGuard } from './guards/auth.guard';
       signOptions: { expiresIn: '2h' },
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '/public'),
+      rootPath: join(__dirname, '..', 'public'),
     }),
     PassportModule,
     PrismaModule,
