@@ -24,7 +24,6 @@ export class AuthController {
   }
 
   //* log-out
-  // @UseGuards(JwtAuthGuard)
   @Private('user')
   @Delete('/log-out')
   logOut(@DUser() user: User) {
@@ -32,7 +31,6 @@ export class AuthController {
   }
 
   //* refreshToken 발급
-  // @UseGuards(JwtAuthGuard)
   @Private('user')
   @Get('refresh-token')
   async refreshToken(@DUser() user: User) {
